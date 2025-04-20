@@ -4,10 +4,10 @@ import time
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 from langchain_core.documents import Document
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_mistralai import MistralAIEmbeddings
+from tqdm import tqdm
 
 # Charger la clé API à partir du fichier .env
 load_dotenv()
