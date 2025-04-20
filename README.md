@@ -22,8 +22,9 @@ Avant de commencer, assurez-vous d'avoir installé les prérequis suivants :
 1. Clonez ce dépôt sur votre machine locale :
 
    ```bash
-   git clone https://github.com/votre-utilisateur/chatbot-culturel-occitanie.git
+   git clone https://github.com/zaracky/POC-RAG-System.git
    cd chatbot-culturel-occitanie
+
 
 2. Créez un environnement virtuel :
 
@@ -59,10 +60,21 @@ Vous pouvez commencer à poser des questions au chatbot, par exemple :
 
 Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automatiquement lors de chaque push ou pull request. Pour les exécuter localement, utilisez :
 
-
-   python -m unittest discover tests/
+   - python -m unittest discover tests/
 
 
 
 
 ## Structure du Projet
+
+      ├── chatbot-culturel-occitanie/
+         ├── chatbot.py                   
+         ├── requirements.txt           
+         ├── .tests/         
+            └── test.yml           
+            └── test_chatbot.py
+         └── Openagenda.py
+         └── Index_faiss.py
+
+## Contributions
+Les contributions sont les bienvenues ! Si vous avez une idée ou une amélioration, ouvrez une pull request.
