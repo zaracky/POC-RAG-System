@@ -70,11 +70,12 @@ Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automa
       ├── chatbot-culturel-occitanie/
          ├── chatbot.py                   
          ├── requirements.txt           
-         ├── .tests/         
+         ├── tests/         
             └── test.yml           
             └── test_chatbot.py
          └── Openagenda.py
          └── Index_faiss.py
+         ├── index/  
 
 ## Explications des fichiers et répertoires :
 - chatbot.py : Contient le code principal pour faire fonctionner le chatbot et interagir avec l'utilisateur.
