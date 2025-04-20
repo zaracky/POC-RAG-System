@@ -75,7 +75,7 @@ Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automa
             └── test_chatbot.py
          └── Openagenda.py
          └── Index_faiss.py
-         ├── index/  
+         ├── index_faiss/  # Dossier contenant les index vectoriels
 
 ## Explications des fichiers et répertoires :
 - chatbot.py : Contient le code principal pour faire fonctionner le chatbot et interagir avec l'utilisateur.
