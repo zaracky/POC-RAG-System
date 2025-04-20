@@ -1,1 +1,68 @@
-# POC-RAG-System
+# POC-RAG-System: Chatbot Culturel Occitanie
+
+Ce projet implémente un **chatbot culturel** capable de recommander des événements en Occitanie en se basant sur des données provenant d'Open Agenda, et d'interagir avec l'utilisateur de manière naturelle. Le chatbot utilise **FAISS** pour l'indexation des événements et **MistralAI** pour les embeddings et la génération de réponses via un modèle de langage.
+
+## Fonctionnalités
+
+- Recherche d'événements en Occitanie selon des critères spécifiques (type d'événement, lieu, date).
+- Recommandations personnalisées en fonction de la question de l'utilisateur.
+- Génération de réponses naturelles basées sur des données extraites de la base vectorielle.
+- Tests unitaires intégrés via GitHub Actions pour assurer la qualité du code.
+
+## Prérequis
+
+Avant de commencer, assurez-vous d'avoir installé les prérequis suivants :
+
+- Python 3.8+ (Testé avec Python 3.8, 3.9, 3.10)
+- GitHub Actions pour l'exécution des tests unitaires
+- Clé API pour **MistralAI** (inscription nécessaire sur [Mistral AI](https://mistral.ai))
+
+## Installation
+
+1. Clonez ce dépôt sur votre machine locale :
+
+   ```bash
+   git clone https://github.com/votre-utilisateur/chatbot-culturel-occitanie.git
+   cd chatbot-culturel-occitanie
+
+2. Créez un environnement virtuel :
+
+   ```bash
+   python -m venv env
+   source env/bin/activate  # sur Windows : env\Scripts\activate
+
+3. Installez les dépendances nécessaires :
+
+   ```bash
+   pip install -r requirements.txt
+
+4. Configurez votre clé API Mistral dans les variables d'environnement :
+
+   ```bash
+   export MISTRAL_API_KEY="votre-clé-api"
+
+ou créez un fichier .env à la racine du projet avec la clé :
+
+   - MISTRAL_API_KEY="votre-clé-api"
+
+
+5. Exécutez le chatbot :
+
+   ```bash
+   python chatbot.py
+
+Vous pouvez commencer à poser des questions au chatbot, par exemple :
+
+   - Quels événements musicaux à Toulouse cette semaine ?
+
+## Tests
+
+Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automatiquement lors de chaque push ou pull request. Pour les exécuter localement, utilisez :
+
+
+   python -m unittest discover tests/
+
+
+
+
+## Structure du Projet
