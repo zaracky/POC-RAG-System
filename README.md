@@ -76,5 +76,24 @@ Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automa
          └── Openagenda.py
          └── Index_faiss.py
 
+## Explications des fichiers et répertoires :
+- chatbot.py : Contient le code principal pour faire fonctionner le chatbot et interagir avec l'utilisateur.
+
+- index_faiss.py : Contient le code pour indexer les événements dans la base FAISS.
+
+- openagenda.py : Gère l'accès et le nettoyage des données provenant d'OpenAgenda avant de les indexer.
+
+- requirements.txt : Liste des dépendances nécessaires pour faire fonctionner le projet.
+
+- index/ : Contient les fichiers d'index FAISS. Ce répertoire est utilisé pour stocker les index qui permettent d'effectuer des recherches rapides basées sur la similarité sémantique.
+
+- tests/ : Contient les tests unitaires pour vérifier le bon fonctionnement du chatbot.
+
+
+## GitHub Actions - CI/CD
+
+Un pipeline GitHub Actions est configuré pour exécuter les tests unitaires lors de chaque push ou pull request. Il utilise le fichier test.yml dans le répertoire .github/workflows/ pour automatiser cette tâche.
+
 ## Contributions
+
 Les contributions sont les bienvenues ! Si vous avez une idée ou une amélioration, ouvrez une pull request.
