@@ -27,7 +27,7 @@ def nettoyer_texte(texte):
 
 def obtenir_evenements_structures():
     """Récupère les événements culturels filtrés et formatés depuis l'API OpenAgenda."""
-    start_year = 2024
+    start_year = 2025
     location = "Occitanie"
     results = []
     event_types = ["cinema", "festival", "concert", "danse", "spectacle", "théâtre", "jazz", "exposition",
