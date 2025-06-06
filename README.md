@@ -58,11 +58,20 @@ Vous pouvez commencer à poser des questions au chatbot, par exemple :
 
 ## Tests
 
-Les tests unitaires sont intégrés via GitHub Actions et sont exécutés automatiquement lors de chaque push ou pull request. Pour les exécuter localement, utilisez :
+Les tests unitaires sont exécutés automatiquement à chaque push grâce à GitHub Actions.
 
+Pour exécuter les tests localement :
    - python -m unittest discover tests/
 
+## Exemples d’utilisation
 
+Voici quelques exemples de requêtes que vous pouvez tester avec le chatbot :
+
+- "Quels concerts sont prévus à Toulouse ce week-end ?"
+- "Y a-t-il des spectacles à Montpellier entre le 10 et le 20 juillet 2025 ?"
+- "Quels événements originaux recommandes-tu pour bientôt ?"
+
+Le chatbot tentera d’interpréter les expressions temporelles floues et vous répondra à l’aide des données les plus pertinentes disponibles.
 
 
 ## Structure du Projet
