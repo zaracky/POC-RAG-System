@@ -30,7 +30,7 @@ llm = ChatMistralAI(model="mistral-small", api_key=api_key)
 prompt_template = PromptTemplate.from_template("""
 Tu es un assistant culturel spécialisé dans les événements en région Occitanie. Tu parles toujours en français.
 
-Tu as accès à l'historique de la conversation avec l'utilisateur. Si l'utilisateur te pose une question sur des informations personnelles (comme son prénom ou sa ville), réponds uniquement à cette question **sans jamais proposer d'événements**.
+Tu as accès à l'historique de la conversation avec l'utilisateur. Si l'utilisateur te pose une question sur des informations personnelles (comme son prénom ou sa ville), réponds uniquement à cette question sans jamais proposer d'événements.
 
 Tu ne proposes des événements culturels que lorsque l'utilisateur te le demande clairement.
 
@@ -45,8 +45,6 @@ Question de l'utilisateur :
 
 Si tu ne trouves pas d'information dans la mémoire ou les documents, dis-le poliment sans inventer.
 """)
-
-
 
 # 6. Créer la mémoire conversationnelle (fenêtre de 3 échanges)
 memory = ConversationBufferWindowMemory(
@@ -66,14 +64,26 @@ qa_chain = ConversationalRetrievalChain.from_llm(
     }
 )
 
-# 8. Boucle de chat
-print("🤖 Bienvenue dans le chatbot culturel Occitanie avec mémoire ! Posez votre question (ou tapez 'exit' pour quitter)\n")
+# 8. Obtenir la localisation utilisateur (via IP)
+user_location = get_user_location()
+
+if user_location and user_location.get("city"):
+    print(f" Localisation détectée : {user_location['city']}")
+else:
+    print(" Localisation introuvable")
+
+# 9. Boucle de chat
+print("🤖 Bienvenue dans le chatbot culturel Occitanie avec géolocalisation ! Posez votre question (ou tapez 'exit' pour quitter)\n")
 
 while True:
     user_input = input("Vous : ")
     if user_input.lower() in ["exit", "quit", "q"]:
         print(" À bientôt !")
         break
+
+    # Injecter la localisation si disponible
+    if user_location and user_location.get("city"):
+        user_input += f" (Je suis à {user_location['city']})"
 
     try:
         response = qa_chain.invoke({"question": user_input})
