@@ -10,10 +10,5 @@ pandas==2.2.2
 requests==2.31.0
 faiss-cpu==1.8.0
 python-dotenv==1.0.1
-git+https://github.com/smol-ai/smol-agent.git
 duckduckgo-search
-openai
-mistralai
-faiss-cpu
 requests
-
