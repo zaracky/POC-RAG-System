@@ -4,10 +4,17 @@ Ce projet implémente un **chatbot culturel** capable de recommander des événe
 
 ## Fonctionnalités
 
-- Recherche d'événements en Occitanie selon des critères spécifiques (type d'événement, lieu, date).
-- Recommandations personnalisées en fonction de la question de l'utilisateur.
-- Génération de réponses naturelles basées sur des données extraites de la base vectorielle.
-- Tests unitaires intégrés via GitHub Actions pour assurer la qualité du code.
+1. **Mémoire conversationnelle** intégrée
+2. **Géolocalisation** automatique via IP, fallback sur Toulouse
+3. **Recherche web en direct** via DuckDuckGo lorsqu’aucune donnée n’est trouvée localement
+4. **Monitoring & feedback** :
+   - Logs horodatés dans `csv/chatbot_logs_<YYYY-MM-DD>.csv`
+   - Question, ville, fallback, temps de réponse
+   - Feedback global `o/n` après fin de session
+5. **Gestion de la date "du jour"** :
+   - Injection de la `current_date` dans le prompt
+   - (Optionnel) Support du parsing intelligent ("ce weekend" → dates réelles) via `python-dateparser`
+
 
 ## Prérequis
 
@@ -77,7 +84,8 @@ Le chatbot tentera d’interpréter les expressions temporelles floues et vous r
 ## Structure du Projet
 
       ├── chatbot-culturel-occitanie/
-         ├── chatbot.py                   
+         ├── chatbot.py           
+         ├── geo.py #module de géolocalisation     
          ├── requirements.txt           
          ├── tests/         
             └── test.yml           
