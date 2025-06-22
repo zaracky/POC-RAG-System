@@ -16,104 +16,76 @@ api_key = os.getenv('MISTRAL_AI_KEY')
 # 2. Charger les embeddings Mistral
 embeddings = MistralAIEmbeddings(model="mistral-embed", api_key=api_key)
 
-# 3. Chargement de l'index FAISS
+# 3. Charger la base vectorielle FAISS
 vectorstore = FAISS.load_local(
-    "faiss_index", 
-    embeddings, 
+    "faiss_index",
+    embeddings,
     allow_dangerous_deserialization=True
 )
 
-# 4. Modèle Mistral
+# 4. Charger le modèle de chat Mistral
 llm = ChatMistralAI(model="mistral-small", api_key=api_key)
 
-# 5. Ajout de la date du jour dans le prompt
-aujourdhui = datetime.today().strftime("%Y-%m-%d")
+# 5. Définir le prompt
+prompt_template = PromptTemplate.from_template("""
+Tu es un assistant culturel spécialisé dans les événements en région Occitanie. Tu parles toujours en français.
 
-prompt_template = PromptTemplate.from_template(f"""
-Tu es un assistant culturel spécialisé dans les événements en région Occitanie.
-Aujourd'hui, nous sommes le {aujourdhui}.
+Tu as accès à l'historique de la conversation avec l'utilisateur. Si l'utilisateur te pose une question sur des informations personnelles (comme son prénom ou sa ville), réponds uniquement à cette question **sans jamais proposer d'événements**.
 
-L'utilisateur pose une question à propos d'événements dans une période spécifique.
-NE FOURNIS que des événements DONT LA DATE DE DÉBUT EST POSTÉRIEURE OU ÉGALE à la date d'aujourd'hui, et idéalement dans la période précisée.
-Si aucun événement ne correspond, indique-le simplement.
- NE FOURNIS PAS d'événements passés même s'ils sont proches ou similaires.
+Tu ne proposes des événements culturels que lorsque l'utilisateur te le demande clairement.
+
+Historique de la conversation :
+{chat_history}
 
 Contexte :
-{{context}}
+{context}
 
 Question de l'utilisateur :
-{{question}}
+{question}
+
+Si tu ne trouves pas d'information dans la mémoire ou les documents, dis-le poliment sans inventer.
 """)
 
 
-# 6. Création de la chaîne QA
-qa_chain = RetrievalQA.from_chain_type(
+
+# 6. Créer la mémoire conversationnelle (fenêtre de 3 échanges)
+memory = ConversationBufferWindowMemory(
+    k=3,
+    return_messages=True,
+    memory_key="chat_history"
+)
+
+# 7. Construire la chaîne RAG avec mémoire
+qa_chain = ConversationalRetrievalChain.from_llm(
     llm=llm,
     retriever=vectorstore.as_retriever(),
-    chain_type_kwargs={
+    memory=memory,
+    combine_docs_chain_kwargs={
         "prompt": prompt_template,
         "document_variable_name": "context"
     }
 )
 
-# 7. Fonction pour enrichir les requêtes temporelles
-
-def enrichir_question(question):
-    from dateparser.search import search_dates
-    import dateparser
-    from datetime import datetime, timedelta
-
-    # Gestion manuelle de "ce week-end"
-    if "ce week-end" in question.lower() or "ce weekend" in question.lower():
-        today = datetime.today()
-        samedi = today + timedelta((5 - today.weekday()) % 7)  # prochain samedi
-        dimanche = samedi + timedelta(days=1)
-        question = question.lower().replace("ce week-end", f"entre {samedi.strftime('%Y-%m-%d')} et {dimanche.strftime('%Y-%m-%d')}")
-        question = question.replace("ce weekend", f"entre {samedi.strftime('%Y-%m-%d')} et {dimanche.strftime('%Y-%m-%d')}")
-
-    # Forcer dateparser à chercher vers le futur
-    settings = {
-        'PREFER_DATES_FROM': 'future',
-        'RELATIVE_BASE': datetime.now()
-    }
-
-    dates_detectees = search_dates(question, settings=settings, languages=['fr'])
-    date_annonce = ""
-
-    if dates_detectees:
-        for expr, date in dates_detectees:
-            question = question.replace(expr, date.strftime("%Y-%m-%d"))
-        if len(dates_detectees) >= 1:
-            date_annonce = f"\n(période ciblée : du {dates_detectees[0][1].strftime('%Y-%m-%d')}"
-            if len(dates_detectees) > 1:
-                date_annonce += f" au {dates_detectees[1][1].strftime('%Y-%m-%d')})"
-            else:
-                date_annonce += ")"
-    return question + date_annonce
-
-
-
 # 8. Boucle de chat
-print("\U0001f916 Bienvenue dans le chatbot culturel Occitanie ! Posez votre question (ou tapez 'exit' pour quitter)\n")
+print("🤖 Bienvenue dans le chatbot culturel Occitanie avec mémoire ! Posez votre question (ou tapez 'exit' pour quitter)\n")
 
 while True:
     user_input = input("Vous : ")
     if user_input.lower() in ["exit", "quit", "q"]:
-        print("👋 À bientôt !")
+        print(" À bientôt !")
         break
 
     try:
-        question_enrichie = enrichir_question(user_input)
-        response = qa_chain.invoke({"query": question_enrichie})
-        context = response.get("result", "").strip()
+        response = qa_chain.invoke({"question": user_input})
+        result = response.get("answer", "").strip()
 
-        if not context or "aucun événement" in context.lower():
-            print("❌ Désolé, je n'ai trouvé aucun événement correspondant à votre recherche.")
+        if not result or "aucun événement" in result.lower():
+            print(" Désolé, je n'ai trouvé aucun événement correspondant à votre recherche.")
         else:
-            print(f"\nAssistant : {context}\n")
+            print(f"\nAssistant : {result}\n")
     except Exception as e:
         if "429" in str(e):
-            print("🚦 Trop de requêtes envoyées à l'API Mistral. Attendez quelques secondes et réessayez.")
+            print(" Trop de requêtes envoyées à l'API Mistral. Attendez quelques secondes et réessayez.")
             time.sleep(5)
         else:
-            print("❌ Une erreur est survenue :", e)
+            print(" Une erreur est survenue :", e)
