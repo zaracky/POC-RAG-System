@@ -1,3 +1,5 @@
+streamlit
+duckduckgo-search==0.9
 langchain==0.1.17
 langchain-community==0.0.27
 langchain-core==0.1.35
@@ -8,9 +10,5 @@ tqdm==4.66.4
 beautifulsoup4==4.12.3
 pandas==2.2.2
 requests==2.31.0
-faiss-cpu==1.8.0
 python-dotenv==1.0.1
-duckduckgo-search
-requests
-streamlit
-tqdm
+faiss-cpu==1.8.0
